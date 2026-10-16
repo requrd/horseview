@@ -12,8 +12,8 @@ readme = "README.md"
 dependencies = ["flask-migrate>=4.1.0", "pymysql>=1.1.1"]
 
 [project.urls]
-"Bug Tracker" = "https://github.com/astroripple/horseview/issues"
-Homepage = "https://github.com/astroripple/horseview"
+"Bug Tracker" = "https://github.com/requrd/horseview/issues"
+Homepage = "https://github.com/requrd/horseview"
 
 [build-system]
 requires = ["setuptools>=42"]

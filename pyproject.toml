@@ -9,6 +9,7 @@ name = "jrdb-model"
 version = "0.2.11"
 description = "ORM for JRDB"
 readme = "README.md"
+requires-python = ">=3.13"
 dependencies = ["flask-migrate>=4.1.0", "pymysql>=1.1.1"]
 
 [project.urls]

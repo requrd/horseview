@@ -6,7 +6,7 @@ from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, backref, mapped_column, relationship
 
 from ..master.horsebase import HorsebaseData
-from ..sessioncontroll import db
+from ..sessioncontroll import Model
 from .calculated_score import CalculatedScoreData
 from .predict import PredictData
 from .seiseki import SeisekiData
@@ -14,7 +14,7 @@ from .trainanalysis import TrainAnalysisData
 from .trainoikiri import TrainOikiriData
 
 
-class RacehorseData(db.Model):
+class RacehorseData(Model):
     """競走馬データ.
 
     Args:
@@ -23,7 +23,7 @@ class RacehorseData(db.Model):
     """
 
     __tablename__ = "racehorse"
-    __table_args__ = {"mariadb_row_format": "DYNAMIC"}
+    __table_args__ = {"mariadb_row_format": "DYNAMIC"}  # noqa: RUF012
     racehorsekey: Mapped[str] = mapped_column(String(255), primary_key=True)
     # 親に対して
     racekey: Mapped[str] = mapped_column(String(255), ForeignKey("bangumi.racekey"))

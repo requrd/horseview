@@ -7,10 +7,10 @@ from sqlalchemy.orm import Mapped, backref, mapped_column, relationship
 
 from jrdb_model import BangumiData
 
-from ..sessioncontroll import db
+from ..sessioncontroll import Model
 
 
-class KaisaiData(db.Model):
+class KaisaiData(Model):
     """開催データ."""
 
     __tablename__ = "kaisai"

@@ -5,11 +5,11 @@ from typing import Optional
 from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, backref, mapped_column, relationship
 
-from ..sessioncontroll import db
+from ..sessioncontroll import Model
 from .seisekirace import SeisekiRaceData
 
 
-class SeisekiData(db.Model):
+class SeisekiData(Model):
     """成績データ.
 
     Args:

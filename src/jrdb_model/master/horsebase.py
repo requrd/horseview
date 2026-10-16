@@ -3,10 +3,10 @@
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column
 
-from ..sessioncontroll import db
+from ..sessioncontroll import Model
 
 
-class HorsebaseData(db.Model):
+class HorsebaseData(Model):
     """馬基本データ.
 
     Args:

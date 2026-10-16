@@ -3,10 +3,10 @@
 from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column
 
-from ..sessioncontroll import db
+from ..sessioncontroll import Model
 
 
-class ReturninfoData(db.Model):
+class ReturninfoData(Model):
     """払戻金データ.
 
     Args:

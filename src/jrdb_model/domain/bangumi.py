@@ -5,7 +5,7 @@ from typing import List, Optional
 from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, backref, mapped_column, relationship
 
-from ..sessioncontroll import db
+from ..sessioncontroll import Model
 from .predict_race import PredictRaceData
 from .racehorse import RacehorseData
 from .returninfo import ReturninfoData
@@ -14,7 +14,7 @@ from .wakuren_odds import WakurenOddsData
 from .wide_odds import WideOddsData
 
 
-class BangumiData(db.Model):
+class BangumiData(Model):
     """レースデータ.
 
     Args:

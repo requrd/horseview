@@ -3,10 +3,10 @@
 from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column
 
-from ..sessioncontroll import db
+from ..sessioncontroll import Model
 
 
-class TrainOikiriData(db.Model):
+class TrainOikiriData(Model):
     """調教追い切りデータ.
 
     Args:

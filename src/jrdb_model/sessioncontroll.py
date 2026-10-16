@@ -1,6 +1,7 @@
 """DBと接続するためのモジュール."""
 
 import os
+from typing import TYPE_CHECKING
 
 from flask import Flask
 from flask_migrate import Migrate
@@ -30,6 +31,16 @@ class Base(DeclarativeBase, MappedAsDataclass):
 
 
 db = SQLAlchemy(model_class=Base)
+
+if TYPE_CHECKING:
+    from flask_sqlalchemy.model import Model as _FSAModel
+
+    class Model(Base, _FSAModel):
+        """型チェック用のdb.Model相当クラス."""
+
+else:
+    Model = db.Model
+
 migrate = Migrate()
 
 

@@ -3,10 +3,12 @@
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column
 
-from ..sessioncontroll import db
+from ..sessioncontroll import Model
 
 
-class TrainerData(db.Model):
+class TrainerData(Model):
+    """調教師データ."""
+
     __tablename__ = "trainer"
     trainer_code: Mapped[int] = mapped_column(primary_key=True)
     delete_flg: Mapped[int] = mapped_column()

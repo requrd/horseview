@@ -3,10 +3,10 @@
 from sqlalchemy import JSON, ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column
 
-from ..sessioncontroll import db
+from ..sessioncontroll import Model
 
 
-class WakurenOddsData(db.Model):
+class WakurenOddsData(Model):
     """枠連オッズデータ.
 
     Args:

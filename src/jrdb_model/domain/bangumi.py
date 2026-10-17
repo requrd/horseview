@@ -67,7 +67,7 @@ class BangumiData(Model):
     win5flg: Mapped[int] = mapped_column()
 
     # 子に対して
-    racehorses: Mapped[Optional[List["RacehorseData"]]] = relationship(
+    racehorses: Mapped[List["RacehorseData"]] = relationship(
         "RacehorseData",
         backref=backref("bangumi"),
         innerjoin=True,

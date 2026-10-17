@@ -15,4 +15,8 @@ jobs:
       - run: uv run ruff format --check .
       - run: uv run ruff check src tests
       - run: uv run mypy src
+      - run: uv run pytest --cov
+      - name: Write coverage report to the job summary
+        if: ${{ !cancelled() }}
+        run: uv run coverage report --format=markdown >> "$GITHUB_STEP_SUMMARY"
       - run: uv build

@@ -45,3 +45,11 @@ testpaths = ["tests"]
 [[tool.mypy.overrides]]
 module = ["flask_migrate"]
 ignore_missing_imports = true
+
+[tool.coverage.run]
+source = ["jrdb_model"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true

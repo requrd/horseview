@@ -48,6 +48,6 @@ class KaisaiData(Model):
     precipitation: Mapped[int] = mapped_column()
 
     # 子に対して
-    races: Mapped[Optional[List["BangumiData"]]] = relationship(
+    races: Mapped[List["BangumiData"]] = relationship(
         "BangumiData", backref=backref("kaisai"), innerjoin=True, default_factory=list
     )

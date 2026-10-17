@@ -8,6 +8,10 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # カバレッジレポートを PR にコメントする
+      pull-requests: write
     steps:
       - uses: actions/checkout@v7
       - uses: astral-sh/setup-uv@v10.3.0
@@ -15,8 +19,22 @@ jobs:
       - run: uv run ruff format --check .
       - run: uv run ruff check src tests
       - run: uv run mypy src
-      - run: uv run pytest --cov
-      - name: Write coverage report to the job summary
-        if: ${{ !cancelled() }}
-        run: uv run coverage report --format=markdown >> "$GITHUB_STEP_SUMMARY"
+      - id: pytest
+        run: uv run pytest --cov
+      # テストが失敗してもカバレッジは出す (テストまで進まなかった場合は除く)
+      - name: Build coverage report
+        if: ${{ !cancelled() && steps.pytest.outcome != 'skipped' }}
+        run: |
+          {
+            echo "## Coverage"
+            echo
+            uv run coverage report --format=markdown
+          } > "$RUNNER_TEMP/coverage.md"
+          cat "$RUNNER_TEMP/coverage.md" >> "$GITHUB_STEP_SUMMARY"
+      - name: Comment coverage report on the pull request
+        if: ${{ !cancelled() && steps.pytest.outcome != 'skipped' && github.event_name == 'pull_request' }}
+        uses: marocchino/sticky-pull-request-comment@v3.0.5
+        with:
+          header: coverage
+          path: ${{ runner.temp }}/coverage.md
       - run: uv build

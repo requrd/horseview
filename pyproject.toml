@@ -6,7 +6,7 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 name = "jrdb-model"
-version = "0.2.13"
+version = "0.2.14"
 description = "ORM for JRDB"
 readme = "README.md"
 requires-python = ">=3.13"
@@ -53,3 +53,7 @@ branch = true
 [tool.coverage.report]
 show_missing = true
 skip_covered = true
+
+[tool.setuptools.package-data]
+# 利用側で型チェックできるよう、型情報を持つことを示すマーカーを同梱する
+jrdb_model = ["py.typed"]

@@ -30,7 +30,6 @@ from .master.mastercode import (
 )
 from .master.trainer import TrainerData
 
-# 更新処理用のセッションオブジェクト
 # flask用オブジェクト
 from .sessioncontroll import create_app, db
 
@@ -62,7 +61,6 @@ __all__ = [
     "UmarenOddsData",
     "WakurenOddsData",
     "WideOddsData",
-    "app",
+    "create_app",
     "db",
-    "sesobj",
 ]

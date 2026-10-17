@@ -6,11 +6,18 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 name = "jrdb-model"
-version = "0.2.11"
+version = "0.2.12"
 description = "ORM for JRDB"
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = ["flask-migrate>=4.1.0", "pymysql>=1.1.1"]
+dependencies = [
+    "flask>=3.1.0",
+    "flask-migrate>=4.1.0",
+    "flask-sqlalchemy>=3.1.1",
+    "pymysql>=1.1.1",
+    # Flask-SQLAlchemy 3.1 は SQLAlchemy 2.1 の MappedAsDataclass と互換性がない
+    "sqlalchemy>=2.0.16,<2.1",
+]
 
 [project.urls]
 "Bug Tracker" = "https://github.com/requrd/horseview/issues"
@@ -20,8 +27,9 @@ Homepage = "https://github.com/requrd/horseview"
 requires = ["setuptools>=42"]
 build-backend = "setuptools.build_meta"
 
-[tool.uv]
-dev-dependencies = ["mypy>=1.15.0", "pytest>=8.3.5", "ruff>=0.11.10"]
+[dependency-groups]
+dev = ["mypy>=1.15.0", "pytest>=8.3.5", "pytest-cov>=6.0.0", "ruff>=0.11.10"]
+
 [tool.ruff.lint]
 select = ["RUF", "I", "SIM", "FURB", "PIE", "PERF", "C4", "B", "PL", "D", "S"]
 
@@ -37,3 +45,11 @@ testpaths = ["tests"]
 [[tool.mypy.overrides]]
 module = ["flask_migrate"]
 ignore_missing_imports = true
+
+[tool.coverage.run]
+source = ["jrdb_model"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true

@@ -1,7 +1,9 @@
 """DBと接続するためのモジュール."""
 
 import os
-from typing import TYPE_CHECKING
+from collections.abc import Mapping
+from types import MappingProxyType
+from typing import TYPE_CHECKING, Any
 
 from flask import Flask
 from flask_migrate import Migrate
@@ -44,11 +46,25 @@ else:
 migrate = Migrate()
 
 
-def create_app() -> Flask:
-    """DBとの接続を初期化する."""
+# プール内の接続がサーバー側で切断されていても(wait_timeout, DBの再起動など)
+# 再接続できるよう、使用前に疎通確認する
+DEFAULT_ENGINE_OPTIONS: Mapping[str, Any] = MappingProxyType({"pool_pre_ping": True})
+
+
+def create_app(engine_options: Mapping[str, Any] | None = None) -> Flask:
+    """DBとの接続を初期化する.
+
+    Args:
+        engine_options: create_engineに渡す設定. DEFAULT_ENGINE_OPTIONSを上書きする.
+
+    """
     app = Flask(__name__)
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DB"]
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
+        **DEFAULT_ENGINE_OPTIONS,
+        **(engine_options or {}),
+    }
     db.init_app(app)
     migrate.init_app(app, db)
     return app

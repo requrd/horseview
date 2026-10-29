@@ -2,7 +2,7 @@
 
 from typing import Optional
 
-from sqlalchemy import ForeignKey, String
+from sqlalchemy import Double, ForeignKey, String
 from sqlalchemy.orm import Mapped, backref, mapped_column, relationship
 
 from ..sessioncontroll import Model
@@ -101,7 +101,7 @@ class SeisekiData(Model):
     race_leg_type: Mapped[str] = mapped_column(String(255))
     win_ret: Mapped[int] = mapped_column()
     place_ret: Mapped[int] = mapped_column()
-    this_money: Mapped[int] = mapped_column()
+    this_money: Mapped[float] = mapped_column(Double)
     earned_money: Mapped[int] = mapped_column()
     race_pace_flow: Mapped[int] = mapped_column()
     horse_pace_flow: Mapped[int] = mapped_column()

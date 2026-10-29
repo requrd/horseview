@@ -6,7 +6,7 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 name = "jrdb-model"
-version = "0.2.15"
+version = "0.3.0"
 description = "ORM for JRDB"
 readme = "README.md"
 requires-python = ">=3.13"

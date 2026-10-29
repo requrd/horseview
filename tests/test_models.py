@@ -90,7 +90,7 @@ def test_create_all_creates_every_table():
 def test_load_kaisai_with_nested_relations():
     """開催から出走馬の成績までジョインロードで辿れる."""
     kaisai = build(KaisaiData, kaisaikey="kaisai1", ymd=20220105)
-    race = build(BangumiData, racekey="race1", kaisaikey="kaisai1")
+    race = build(BangumiData, racekey="race1", kaisaikey="kaisai1", ymd=20220105)
     horse = build(RacehorseData, racehorsekey="horse1", racekey="race1")
     result = build(
         SeisekiData,
@@ -110,3 +110,49 @@ def test_load_kaisai_with_nested_relations():
     racehorse = loaded.races[0].racehorses[0]
     assert racehorse.result.order_of_arrival == 4
     assert racehorse.bangumi.kaisai.kaisaikey == "kaisai1"
+
+
+@pytest.mark.usefixtures("app")
+def test_kaisai_split_into_two_days():
+    """代替競馬では同じ開催キーの開催が日ごとに別の行になり、レースも日ごとに分かれる."""
+    db.session.add_all(
+        [
+            build(KaisaiData, kaisaikey="062032", ymd=20200329, precipitation=5.5),
+            build(KaisaiData, kaisaikey="062032", ymd=20200331, precipitation=0.0),
+            build(BangumiData, racekey="06203201", kaisaikey="062032", ymd=20200329),
+            build(BangumiData, racekey="06203203", kaisaikey="062032", ymd=20200331),
+        ]
+    )
+    db.session.commit()
+    db.session.expunge_all()
+
+    loaded = {
+        kaisai.ymd: kaisai
+        for kaisai in KaisaiData.query.options(joinedload(KaisaiData.races)).all()
+    }
+    assert [race.racekey for race in loaded[20200329].races] == ["06203201"]
+    assert [race.racekey for race in loaded[20200331].races] == ["06203203"]
+    assert loaded[20200329].precipitation == 5.5
+
+
+@pytest.mark.usefixtures("app")
+def test_decimal_columns_keep_fraction():
+    """小数の列は小数点以下を保つ."""
+    db.session.add_all(
+        [
+            build(KaisaiData, kaisaikey="kaisai1", ymd=20220105, turf_length=12.5),
+            build(BangumiData, racekey="race1", kaisaikey="kaisai1", ymd=20220105),
+            build(RacehorseData, racehorsekey="horse1", racekey="race1"),
+            build(
+                SeisekiData,
+                racehorsekey="horse1",
+                this_money=55.5,
+                seisekirace=build(SeisekiRaceData, racekey="race1"),
+            ),
+        ]
+    )
+    db.session.commit()
+    db.session.expunge_all()
+
+    assert db.session.get(KaisaiData, ("kaisai1", 20220105)).turf_length == 12.5
+    assert db.session.get(SeisekiData, "horse1").this_money == 55.5

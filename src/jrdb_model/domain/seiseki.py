@@ -21,7 +21,9 @@ class SeisekiData(Model):
     racehorsekey: Mapped[str] = mapped_column(
         String(255), ForeignKey("racehorse.racehorsekey"), primary_key=True
     )
-    racekey: Mapped[str] = mapped_column(String(255), ForeignKey("seisekirace.racekey"))
+    racekey: Mapped[str] = mapped_column(
+        String(255), ForeignKey("seisekirace.racekey"), index=True
+    )
     bacode: Mapped[int] = mapped_column()
     year: Mapped[int] = mapped_column()
     kai: Mapped[int] = mapped_column()

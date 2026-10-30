@@ -2,7 +2,7 @@
 
 from typing import List, Optional
 
-from sqlalchemy import ForeignKeyConstraint, String
+from sqlalchemy import ForeignKeyConstraint, Index, String
 from sqlalchemy.orm import Mapped, backref, mapped_column, relationship
 
 from ..sessioncontroll import Model
@@ -25,6 +25,7 @@ class BangumiData(Model):
     __tablename__ = "bangumi"
     __table_args__ = (
         ForeignKeyConstraint(["kaisaikey", "ymd"], ["kaisai.kaisaikey", "kaisai.ymd"]),
+        Index("ix_bangumi_kaisaikey_ymd", "kaisaikey", "ymd"),
     )
     racekey: Mapped[str] = mapped_column(String(255), primary_key=True)
     # 親に対して

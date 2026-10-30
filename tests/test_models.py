@@ -156,3 +156,18 @@ def test_decimal_columns_keep_fraction():
 
     assert db.session.get(KaisaiData, ("kaisai1", 20220105)).turf_length == 12.5
     assert db.session.get(SeisekiData, "horse1").this_money == 55.5
+
+
+@pytest.mark.parametrize(
+    ("model", "name", "columns"),
+    [
+        (RacehorseData, "ix_racehorse_racekey", ["racekey"]),
+        (RacehorseData, "ix_racehorse_blood", ["blood"]),
+        (SeisekiData, "ix_seiseki_racekey", ["racekey"]),
+        (BangumiData, "ix_bangumi_kaisaikey_ymd", ["kaisaikey", "ymd"]),
+    ],
+)
+def test_foreign_keys_have_indexes(model: Any, name: str, columns: list[str]) -> None:
+    """外部キーの列に索引がある(Postgresは外部キーに自動で索引を作らない)."""
+    indexes = {index.name: index for index in model.__table__.indexes}
+    assert [column.name for column in indexes[name].columns] == columns

@@ -26,14 +26,16 @@ class RacehorseData(Model):
     __table_args__ = {"mariadb_row_format": "DYNAMIC"}  # noqa: RUF012
     racehorsekey: Mapped[str] = mapped_column(String(255), primary_key=True)
     # 親に対して
-    racekey: Mapped[str] = mapped_column(String(255), ForeignKey("bangumi.racekey"))
+    racekey: Mapped[str] = mapped_column(
+        String(255), ForeignKey("bangumi.racekey"), index=True
+    )
     bacode: Mapped[int] = mapped_column()
     year: Mapped[int] = mapped_column()
     kai: Mapped[int] = mapped_column()
     day: Mapped[str] = mapped_column(String(255))
     race: Mapped[int] = mapped_column()
     num: Mapped[int] = mapped_column()
-    blood: Mapped[int] = mapped_column(ForeignKey("horsebase.blood"))
+    blood: Mapped[int] = mapped_column(ForeignKey("horsebase.blood"), index=True)
     horse: Mapped[str] = mapped_column(String(255))
     idm: Mapped[float] = mapped_column()
     jockey_score: Mapped[float] = mapped_column()

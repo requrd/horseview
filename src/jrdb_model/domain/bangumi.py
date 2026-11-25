@@ -9,9 +9,6 @@ from ..sessioncontroll import Model
 from .predict_race import PredictRaceData
 from .racehorse import RacehorseData
 from .returninfo import ReturninfoData
-from .umaren_odds import UmarenOddsData
-from .wakuren_odds import WakurenOddsData
-from .wide_odds import WideOddsData
 
 
 class BangumiData(Model):
@@ -81,15 +78,6 @@ class BangumiData(Model):
     # 1:1
     returninfo: Mapped[Optional["ReturninfoData"]] = relationship(
         "ReturninfoData", uselist=False, backref=backref("bangumi"), default=None
-    )
-    umaren_odds: Mapped[Optional["UmarenOddsData"]] = relationship(
-        "UmarenOddsData", uselist=False, backref=backref("bangumi"), default=None
-    )
-    wide_odds: Mapped[Optional["WideOddsData"]] = relationship(
-        "WideOddsData", uselist=False, backref=backref("bangumi"), default=None
-    )
-    wakuren_odds: Mapped[Optional["WakurenOddsData"]] = relationship(
-        "WakurenOddsData", uselist=False, backref=backref("bangumi"), default=None
     )
     predict_race: Mapped[Optional["PredictRaceData"]] = relationship(
         "PredictRaceData", uselist=False, backref=backref("bangumi"), default=None

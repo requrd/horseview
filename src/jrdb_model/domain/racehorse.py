@@ -7,7 +7,6 @@ from sqlalchemy.orm import Mapped, backref, mapped_column, relationship
 
 from ..master.horsebase import HorsebaseData
 from ..sessioncontroll import Model
-from .calculated_score import CalculatedScoreData
 from .predict import PredictData
 from .seiseki import SeisekiData
 from .trainanalysis import TrainAnalysisData
@@ -220,13 +219,6 @@ class RacehorseData(Model):
     )
     predict: Mapped[Optional["PredictData"]] = relationship(
         "PredictData",
-        uselist=False,
-        backref=backref("racehorse"),
-        innerjoin=False,
-        default=None,
-    )
-    calculated_score: Mapped[Optional["CalculatedScoreData"]] = relationship(
-        "CalculatedScoreData",
         uselist=False,
         backref=backref("racehorse"),
         innerjoin=False,

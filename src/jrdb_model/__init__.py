@@ -1,7 +1,6 @@
 """公開パッケージ一覧."""
 
 from .domain.bangumi import BangumiData
-from .domain.calculated_score import CalculatedScoreData
 from .domain.kaisai import KaisaiData
 from .domain.predict import PredictData
 from .domain.predict_race import PredictRaceData
@@ -36,7 +35,6 @@ from .sessioncontroll import create_app, db
 __all__ = [
     "BacodeMaster",
     "BangumiData",
-    "CalculatedScoreData",
     "DistanceadjustMaster",
     "HorsebaseData",
     "IjokbnMaster",

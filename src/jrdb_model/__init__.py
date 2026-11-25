@@ -10,9 +10,6 @@ from .domain.seiseki import SeisekiData
 from .domain.seisekirace import SeisekiRaceData
 from .domain.trainanalysis import TrainAnalysisData
 from .domain.trainoikiri import TrainOikiriData
-from .domain.umaren_odds import UmarenOddsData
-from .domain.wakuren_odds import WakurenOddsData
-from .domain.wide_odds import WideOddsData
 from .master.horsebase import HorsebaseData
 from .master.jockey import JockeyData
 from .master.mastercode import (
@@ -56,9 +53,6 @@ __all__ = [
     "TrainAnalysisData",
     "TrainOikiriData",
     "TrainerData",
-    "UmarenOddsData",
-    "WakurenOddsData",
-    "WideOddsData",
     "create_app",
     "db",
 ]

@@ -1,6 +1,7 @@
 """公開パッケージ一覧."""
 
 from .domain.bangumi import BangumiData
+from .domain.bao_odds import SanrentanOddsData, SanrentanOddsOldData, UmatanOddsData
 from .domain.kaisai import KaisaiData
 from .domain.predict import PredictData
 from .domain.predict_race import PredictRaceData
@@ -46,6 +47,8 @@ __all__ = [
     "RacehorseData",
     "RestreasoncodeMaster",
     "ReturninfoData",
+    "SanrentanOddsData",
+    "SanrentanOddsOldData",
     "SeisekiData",
     "SeisekiRaceData",
     "ShubetsuMaster",
@@ -53,6 +56,7 @@ __all__ = [
     "TrainAnalysisData",
     "TrainOikiriData",
     "TrainerData",
+    "UmatanOddsData",
     "create_app",
     "db",
 ]

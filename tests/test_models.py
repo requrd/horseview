@@ -2,11 +2,13 @@
 
 import dataclasses
 from collections.abc import Iterator
+from datetime import datetime
 from typing import Any
 
 import pytest
 from flask import Flask
 from sqlalchemy import inspect
+from sqlalchemy.dialects import postgresql
 from sqlalchemy.orm import configure_mappers, joinedload
 
 import jrdb_model
@@ -14,8 +16,11 @@ from jrdb_model import (
     BangumiData,
     KaisaiData,
     RacehorseData,
+    SanrentanOddsData,
+    SanrentanOddsOldData,
     SeisekiData,
     SeisekiRaceData,
+    UmatanOddsData,
     create_app,
     db,
 )
@@ -171,3 +176,72 @@ def test_foreign_keys_have_indexes(model: Any, name: str, columns: list[str]) ->
     """外部キーの列に索引がある(Postgresは外部キーに自動で索引を作らない)."""
     indexes = {index.name: index for index in model.__table__.indexes}
     assert [column.name for column in indexes[name].columns] == columns
+
+
+BAO_ODDS_MODELS = [SanrentanOddsData, SanrentanOddsOldData, UmatanOddsData]
+
+
+@pytest.mark.parametrize(
+    ("model", "table"),
+    [
+        (SanrentanOddsData, "sanrentan_odds"),
+        (SanrentanOddsOldData, "sanrentan_odds_old"),
+        (UmatanOddsData, "umatan_odds"),
+    ],
+)
+def test_bao_odds_table_names(model: Any, table: str) -> None:
+    """馬王のオッズは馬王の表と1対1の3つの表になる."""
+    assert model.__tablename__ == table
+    assert table in db.metadata.tables
+
+
+@pytest.mark.parametrize("model", BAO_ODDS_MODELS)
+def test_bao_odds_postgres_columns(model: Any) -> None:
+    """列・型・NULL は取り込みのノートの G の結論の定義と同じ."""
+    columns = {
+        column.name: (
+            str(column.type.compile(dialect=postgresql.dialect())),
+            column.nullable,
+            column.primary_key,
+        )
+        for column in model.__table__.columns
+    }
+    assert columns == {
+        "race_code": ("VARCHAR(11)", False, True),
+        "data_kbn": ("VARCHAR(1)", True, False),
+        "data_created_at": ("TIMESTAMP WITHOUT TIME ZONE", True, False),
+        "announced_at": ("TIMESTAMP WITHOUT TIME ZONE", True, False),
+        "registered_horses": ("SMALLINT", True, False),
+        "ran_horses": ("SMALLINT", True, False),
+        "sold_flg": ("SMALLINT", True, False),
+        "odds": ("TEXT", True, False),
+        "votes": ("INTEGER", True, False),
+    }
+    assert model.__table__.foreign_keys == set()
+
+
+@pytest.mark.usefixtures("app")
+@pytest.mark.parametrize("model", BAO_ODDS_MODELS)
+def test_bao_odds_keeps_rows_without_data(model: Any) -> None:
+    """データ区分が空の行は、競走コードのほかがすべて NULL のまま入る."""
+    db.session.add(model(race_code="19870105101"))
+    db.session.add(
+        model(
+            race_code="20250105061",
+            data_kbn="4",
+            data_created_at=datetime(2025, 1, 5),
+            announced_at=datetime(2025, 1, 5, 9, 30),
+            registered_horses=2,
+            ran_horses=2,
+            sold_flg=1,
+            odds="   1.5   2.8",
+            votes=1234,
+        )
+    )
+    db.session.commit()
+    db.session.expunge_all()
+
+    empty = db.session.get(model, "19870105101")
+    assert empty.data_kbn is None
+    assert empty.odds is None
+    assert db.session.get(model, "20250105061").odds == "   1.5   2.8"

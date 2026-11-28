@@ -16,16 +16,17 @@ from ..sessioncontroll import Model
 class BaoOddsColumns(Model):
     """馬王のオッズの表に共通の列.
 
-    列は馬王の表の列(競走コード・データ区分・データ作成年月日・発表時刻・登録頭数・
+    列とその並びは馬王の表の列(データ区分・データ作成年月日・競走コード・発表時刻・登録頭数・
     出走頭数・発売フラグ・全オッズ・票数合計)と同じ. 競走コードのほかは NULL を許す
     (データ区分が空の行は、ほかの列もすべて空).
     """
 
     __abstract__ = True
 
-    race_code: Mapped[str] = mapped_column(String(11), primary_key=True)
     data_kbn: Mapped[str | None] = mapped_column(String(1), default=None)
     data_created_at: Mapped[datetime | None] = mapped_column(default=None)
+    # 主キー. 馬王の並び(3番目)に置くため、既定値の無い項目をキーワードで渡す
+    race_code: Mapped[str] = mapped_column(String(11), primary_key=True, kw_only=True)
     announced_at: Mapped[datetime | None] = mapped_column(default=None)
     registered_horses: Mapped[int | None] = mapped_column(SmallInteger, default=None)
     ran_horses: Mapped[int | None] = mapped_column(SmallInteger, default=None)

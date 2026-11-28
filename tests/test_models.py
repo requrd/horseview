@@ -220,6 +220,22 @@ def test_bao_odds_postgres_columns(model: Any) -> None:
     assert model.__table__.foreign_keys == set()
 
 
+@pytest.mark.parametrize("model", BAO_ODDS_MODELS)
+def test_bao_odds_columns_follow_bao_order(model: Any) -> None:
+    """列の並びは馬王の表(mdb)の列の並びと同じ(競走コードは3番目)."""
+    assert [column.name for column in model.__table__.columns] == [
+        "data_kbn",
+        "data_created_at",
+        "race_code",
+        "announced_at",
+        "registered_horses",
+        "ran_horses",
+        "sold_flg",
+        "odds",
+        "votes",
+    ]
+
+
 @pytest.mark.usefixtures("app")
 @pytest.mark.parametrize("model", BAO_ODDS_MODELS)
 def test_bao_odds_keeps_rows_without_data(model: Any) -> None:
